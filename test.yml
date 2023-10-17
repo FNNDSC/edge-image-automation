@@ -1,0 +1,5 @@
+---
+- name: Test to make sure things are working
+  hosts: all
+  tasks:
+    - ping:
