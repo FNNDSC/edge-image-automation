@@ -3,7 +3,7 @@
   hosts: all
   become: true
   vars_files:
-    - edge_device.yml
+    - edge-device.yml
 
   pre_tasks:
     - name: Ensure httpd.conf dir exists
