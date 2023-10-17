@@ -2,17 +2,17 @@ name = "{{ blueprint.name }}"
 description = "{{ blueprint.description | default("") }}"
 version = "{{ blueprint.version | default("0.0.1") }}"
 
-{% if blueprint.modules is defined %}
-modules = ["{{ blueprint.modules | join('", "') }}"]
-{% else %}
-modules = []
-{% endif %}
-{% if blueprint.groups is defined %}
-groups = ["{{ blueprint.groups | join('", "') }}"]
-{% else %}
-groups= []
-{% endif %}
+{% for module in blueprint.modules | default([]) %}
+[[modules]]
+name = "{{ module.name }}"
+version = "{{ module.version | default("*") }}"
 
+{% endfor %}
+{% for group in blueprint.package_groups | default([]) %}
+[[groups]]
+name = "{{ group }}"
+
+{% endfor %}
 {% for package in blueprint.packages | default([]) %}
 [[packages]]
 name = "{{ package.name }}"
