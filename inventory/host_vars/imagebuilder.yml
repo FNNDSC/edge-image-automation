@@ -1,3 +1,5 @@
 ---
 ansible_host: aap-chbox.edgelab.dev
 ansible_user: root
+httpd:
+  port: 8080

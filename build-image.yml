@@ -4,8 +4,21 @@
   become: true
   vars_files:
     - edge_device.yml
+
+  pre_tasks:
+    - name: Ensure httpd.conf dir exists
+      ansible.builtin.file:
+        path: /etc/httpd/conf
+        state: directory
+
+    - name: Pre-stage httpd.conf
+      ansible.builtin.template:
+        src: httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+
   roles:
     - role: infra.osbuild.setup_server
+
   tasks:
     - ansible.builtin.include_role:
         name: compose-image
