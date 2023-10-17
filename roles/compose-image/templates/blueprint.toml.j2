@@ -1,0 +1,66 @@
+name = "{{ blueprint.name }}"
+description = "{{ blueprint.description | default("") }}"
+version = "{{ blueprint.version | default("0.0.1") }}"
+
+{% if blueprint.modules is defined %}
+modules = ["{{ blueprint.modules | join('", "') }}"]
+{% else %}
+modules = []
+{% endif %}
+{% if blueprint.groups is defined %}
+groups = ["{{ blueprint.groups | join('", "') }}"]
+{% else %}
+groups= []
+{% endif %}
+
+{% for package in blueprint.packages | default([]) %}
+[[packages]]
+name = "{{ package.name }}"
+version = "{{ package.version | default("*") }}"
+
+{% endfor %}
+{% for container in blueprint.containers | default([]) %}
+[[containers]]
+source = "{{ container }}"
+
+{% endfor %}
+{% if blueprint.services is defined %}
+[customizations.services]
+enabled = ["{{ blueprint.services | join('", "') }}"]
+
+{% endif %}
+{% for user in blueprint.users | default([]) %}
+[[customizations.user]]
+name = "{{ user.name }}"
+{% if user.ssh_key is defined %}
+key = "{{ user.ssh_key }}"
+{% endif %}
+{% if user.password is defined %}
+password = "{{ user.password }}"
+{% endif %}
+{% if user.groups is defined %}
+groups = ["{{ user.groups | join('", "') }}"]
+{% endif %}
+
+{% endfor %}
+{% for directory in blueprint.directories | default([]) %}
+[[customizations.directories]]
+path = "{{ directory.path }}"
+mode = "{{ directory.mode | default("0755") }}"
+user = "{{ directory.user | default("root") }}"
+group = "{{ directory.group | default("root") }}"
+ensure_parents = {{ directory.ensure_parents | default("true") | string | lower }}
+
+{% endfor %}
+{% for file in blueprint.files | default([]) %}
+[[customizations.files]]
+path = "{{ file.path }}"
+mode = "{{ file.mode | default("0644") }}"
+user = "{{ file.user | default("root") }}"
+group = "{{ file.group | default("root") }}"
+{% if file.content is defined %}
+data = """
+{{ file.content }}"""
+{% endif %}
+
+{% endfor %}

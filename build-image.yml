@@ -1,0 +1,15 @@
+---
+- name: Build defined edge images
+  hosts: all
+  become: true
+  vars_files:
+    - edge_device.yml
+  roles:
+    - role: infra.osbuild.setup_server
+  tasks:
+    - ansible.builtin.include_role:
+        name: compose-image
+      loop: "{{ blueprints }}"
+      loop_control:
+        loop_var: blueprint
+        label: "{{ blueprint.name }}"

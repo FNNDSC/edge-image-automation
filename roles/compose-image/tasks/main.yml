@@ -1,0 +1,33 @@
+---
+- name: Load the blueprints into osbuild
+  infra.osbuild.push_blueprint:
+    blueprint: '{{ lookup("template", "blueprint.toml.j2") }}'
+
+- name: Start compose
+  infra.osbuild.start_compose:
+    blueprint: "{{ blueprint.name }}"
+    compose_type: edge-commit
+    allow_duplicate: false
+  register: builder_compose
+
+- name: Download and stage compose
+  when: builder_compose.changed
+  block:
+    - name: Identify the compose
+      ansible.builtin.set_fact:
+        compose_id: '{{ builder_compose["result"]["body"]["build_id"] }}'
+
+    - name: Wait for compose to finish
+      infra.osbuild.wait_compose:
+        compose_id: "{{ compose_id }}"
+        timeout: 3600
+
+    - name: Ensure the commit repo directory exists
+      ansible.builtin.file:
+        path: "{{ commit_repo_dir }}"
+        state: directory
+
+    - name: Export the commit
+      infra.osbuild.export_compose:
+        compose_id: "{{ compose_id }}"
+        dest: "{{ commit_repo_dir }}/{{ compose_id }}-commit.tar"
