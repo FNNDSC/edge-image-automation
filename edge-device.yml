@@ -3,7 +3,11 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with mini-CHRiS configured to run via podman
-    version: 0.0.1
+    version: 0.0.2
+    packages:
+      - name: microshift
+    services:
+      - microshift
     package_groups:
       - container-management
     users:
