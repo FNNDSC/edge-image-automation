@@ -3,4 +3,4 @@ collections:
   - name: infra.osbuild
     source: https://github.com/redhat-cop/infra.osbuild
     type: git
-    version: be6ab306d7d10da4f8bd3e8fb0a553375a5ef6ff
+    version: 7fe8e3afb5e881c07861799232ce9a7355a9dbdd
