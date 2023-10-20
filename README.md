@@ -10,7 +10,7 @@ We need an automated way of creating the artifacts (iso & application) that are 
 
 The following are required while we are deploying to the Edge 
 
-* Edge Device
+* Edge Device (Example - Onlogic HX500)
 * Blueprint
 * Kickstart
 * Ansible Automation Platform
