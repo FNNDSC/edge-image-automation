@@ -2,7 +2,8 @@
 
 ## The Why
 
-We need an automated way of creating the artifacts that are required to run Chris on the Edge (ChBox). 
+We need an automated way of creating the artifacts (iso & application) that are required to run Chris on the Edge (ChBox). 
+
 
 
 ## The What 
