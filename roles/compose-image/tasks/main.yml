@@ -60,7 +60,7 @@
 - name: Generate the kickstart file
   ansible.builtin.template:
     src: kickstart.cfg.j2
-    dest: "{{ commit_repo_dir }}/{{ blueprint.name }}.ks"
+    dest: "{{ commit_repo_dir }}/{{ blueprint.name }}.cfg"
   register: kickstart_gen
 
 - name: Check for the boot iso
@@ -86,7 +86,7 @@
     argv:
       - /usr/bin/mkksiso
       - --ks
-      - "{{ commit_repo_dir }}/{{ blueprint.name }}.ks"
+      - "{{ commit_repo_dir }}/{{ blueprint.name }}.cfg"
       - "{{ commit_repo_dir }}/{{ boot_iso_name }}"
       - "{{ commit_repo_dir }}/{{ blueprint.name }}.iso"
     creates: "{{ commit_repo_dir }}/{{ blueprint.name }}.iso"
