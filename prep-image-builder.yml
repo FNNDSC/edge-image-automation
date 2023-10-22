@@ -1,6 +1,6 @@
 ---
 - name: Build defined edge images
-  hosts: all
+  hosts: imagebuilder
   become: true
 
   pre_tasks:
