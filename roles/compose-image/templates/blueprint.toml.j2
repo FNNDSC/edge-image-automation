@@ -29,7 +29,6 @@ source = "{{ container }}"
 enabled = ["{{ blueprint.services | join('", "') }}"]
 
 {% endif %}
-{% endfor %}
 {% for directory in blueprint.directories | default([]) %}
 [[customizations.directories]]
 path = "{{ directory.path }}"
