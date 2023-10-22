@@ -41,10 +41,44 @@
     - name: Unpack the edge-commit to the web root
       ansible.builtin.unarchive:
         src: "{{ build_dir }}/{{ compose_id }}-commit.tar"
-        dest: "{{ commit_repo_dir }}"
+        dest: "{{ commit_repo_dir }}/{{ blueprint.name }}"
         remote_src: yes
 
     - name: Remove the edge commit tar
       ansible.builtin.file:
         path: "{{ build_dir }}/{{ compose_id }}-commit.tar"
         state: absent
+
+- name: Generate the kickstart file
+  ansible.builtin.template:
+    src: kickstart.cfg.j2
+    dest: "{{ commit_repo_dir }}/{{ blueprint.name }}.ks"
+  register: kickstart_gen
+
+- name: Check for the boot iso
+  ansible.builtin.stat:
+    path: "{{ commit_repo_dir }}/{{ boot_iso_name }}"
+  register: boot_iso
+
+- name: Fail if no boot iso present
+  ansible.builtin.fail:
+    msg: Please download {{ boot_iso_name }} and place it in {{ commit_repo_dir }} to build installer.
+  when:
+    - not boot_iso.stat.exists
+
+- name: Remove installer iso
+  ansible.builtin.file:
+    path: "{{ commit_repo_dir }}/{{ blueprint.name }}.iso"
+    state: absent
+  when:
+    - kickstart_gen.changed
+
+- name: Generate installer iso
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/mkksiso
+      - --ks
+      - "{{ commit_repo_dir }}/{{ blueprint.name }}.ks"
+      - "{{ commit_repo_dir }}/{{ boot_iso_name }}"
+      - "{{ commit_repo_dir }}/{{ blueprint.name }}.iso"
+    creates: "{{ commit_repo_dir }}/{{ blueprint.name }}.iso"
