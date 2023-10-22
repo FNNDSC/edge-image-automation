@@ -4,6 +4,7 @@
     composer-cli blueprints show {{ blueprint.name }} -j | jq -r '.[].body.blueprints[].version'
   register: blueprint_versions
   failed_when: false
+  changed_when: false
 
 - name: Load the blueprints into osbuild
   infra.osbuild.push_blueprint:
