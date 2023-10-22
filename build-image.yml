@@ -2,6 +2,7 @@
 - name: Build defined edge images
   hosts: imagebuilder
   become: true
+
   vars_files:
     - edge-device.yml
 

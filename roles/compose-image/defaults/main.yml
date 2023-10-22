@@ -1,2 +1,3 @@
 ---
-commit_repo_dir: /var/www/html/commits
+commit_repo_dir: /var/www/html
+build_dir: "{{ ansible_env['HOME'] }}"

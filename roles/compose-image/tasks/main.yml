@@ -7,11 +7,44 @@
   infra.osbuild.start_compose:
     blueprint: "{{ blueprint.name }}"
     compose_type: edge-commit
+    ostree_ref: rhel/9/x86_64/edge
+    ostree_parent: rhel/9/x86_64/edge
+    ostree_url: http://localhost:{{ httpd.port }}/repo
     allow_duplicate: false
   register: builder_compose
 
-- name: Wait for compose to finish
-  infra.osbuild.wait_compose:
-    compose_id: "{{ compose_id }}"
-    timeout: 3600
+- name: Update ostree remote
   when: builder_compose.changed
+  block:
+    - name: Identify the compose
+      ansible.builtin.set_fact:
+        compose_id: '{{ builder_compose["result"]["body"]["build_id"] }}'
+
+    - name: Wait for compose to finish
+      infra.osbuild.wait_compose:
+        compose_id: "{{ compose_id }}"
+        timeout: 3600
+
+    - name: Ensure directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ commit_repo_dir }}"
+        - "{{ build_dir }}"
+
+    - name: Export the commit
+      infra.osbuild.export_compose:
+        compose_id: "{{ compose_id }}"
+        dest: "{{ build_dir }}/{{ compose_id }}-commit.tar"
+
+    - name: Unpack the edge-commit to the web root
+      ansible.builtin.unarchive:
+        src: "{{ build_dir }}/{{ compose_id }}-commit.tar"
+        dest: "{{ commit_repo_dir }}"
+        remote_src: yes
+
+    - name: Remove the edge commit tar
+      ansible.builtin.file:
+        path: "{{ build_dir }}/{{ compose_id }}-commit.tar"
+        state: absent
