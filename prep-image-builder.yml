@@ -16,3 +16,11 @@
 
   roles:
     - role: infra.osbuild.setup_server
+
+  tasks:
+    - name: Enable HTTP alternate port through firewall
+      ansible.posix.firewalld:
+        port: "{{ httpd.port }}/tcp"
+        permanent: true
+        immediate: true
+        state: enabled
