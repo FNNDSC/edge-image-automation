@@ -10,18 +10,23 @@ reboot
 network --bootproto=dhcp
 rootpw --lock
 
+ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/{{ blueprint.name }}/repo/ --ref=rhel/9/x86_64/edge
+
+%post
 {% for user in blueprint.users %}
-user --name={{ user.name }}
+adduser --create-home
 {%- if user.groups is defined %}
  --groups={{ user.groups | join(",") }}
 {%- endif %}
 {%- if user.password is defined %}
- --password={{ user.password | ansible.builtin.password_hash("sha512", salt=(user.password_salt|default("FOzvWPBHcOhf5n/L"))) }} --iscrypted
+ --password={{ user.password | ansible.builtin.password_hash("sha512", salt=(user.password_salt|default("FOzvWPBHcOhf5n/L"))) }}
 {%- endif %}
 
+{{ user.name }}
 {% if user.ssh_key is defined %}
-sshkey --username={{ user.name }} "{{ user.ssh_key }}"
+mkdir -p /var/home/{{ user.name }}/.ssh
+echo "{{ user.ssh_key }}" > /var/home/{{ user.name }}/.ssh/authorized_keys
+chown -R {{ user.name }}:{{ user.name }} /var/home/{{ user.name }}/.ssh
 {% endif %}
-
 {% endfor %}
-ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/{{ blueprint.name }}/repo/ --ref=rhel/9/x86_64/edge
+%end
