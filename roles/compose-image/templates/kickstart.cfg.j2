@@ -24,4 +24,4 @@ sshkey --username={{ user.name }} "{{ user.ssh_key }}"
 {% endif %}
 
 {% endfor %}
-ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/repo/{{ blueprint.name }}/ --ref=rhel/9/x86_64/edge
+ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/{{ blueprint.name }}/repo/ --ref=rhel/9/x86_64/edge
