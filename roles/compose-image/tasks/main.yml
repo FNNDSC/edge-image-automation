@@ -1,7 +1,15 @@
 ---
+- name: Check for existing blueprints
+  ansible.builtin.shell: >-
+    composer-cli blueprints show {{ blueprint.name }} -j | jq -r '.[].body.blueprints[].version'
+  register: blueprint_versions
+  failed_when: false
+
 - name: Load the blueprints into osbuild
   infra.osbuild.push_blueprint:
     blueprint: '{{ lookup("template", "blueprint.toml.j2") }}'
+  when:
+    - blueprint.version not in blueprint_versions.stdout_lines
 
 - name: Start compose
   infra.osbuild.start_compose:
