@@ -21,7 +21,7 @@ adduser --create-home
 {%- if user.password is defined %}
  --password={{ user.password | ansible.builtin.password_hash("sha512", salt=(user.password_salt|default("FOzvWPBHcOhf5n/L"))) }}
 {%- endif %}
-{{ user.name }}
+ {{ user.name }}
 {% if user.ssh_keys is defined %}
 mkdir -p /home/{{ user.name }}/.ssh
 {% for ssh_key in user.ssh_keys %}
