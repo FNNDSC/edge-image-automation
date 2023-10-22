@@ -7,7 +7,7 @@ clearpart --all --initlabel
 autopart
 reboot
 
-network --bootproto=dhcp
+network --bootproto=dhcp --device=link --activate --onboot=on
 rootpw --lock
 
 ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/{{ blueprint.name }}/repo/ --ref=rhel/9/x86_64/edge
@@ -23,9 +23,11 @@ adduser --create-home
 {%- endif %}
 
 {{ user.name }}
-{% if user.ssh_key is defined %}
+{% if user.ssh_keys is defined %}
 mkdir -p /home/{{ user.name }}/.ssh
-echo "{{ user.ssh_key }}" > /home/{{ user.name }}/.ssh/authorized_keys
+{% for ssh_key in user.ssh_keys %}
+echo "{{ ssh_key }}" >> /home/{{ user.name }}/.ssh/authorized_keys
+{% endfor %}
 chmod 0600 /home/{{ user.name }}/.ssh/authorized_keys
 chown -R {{ user.name }}:{{ user.name }} /home/{{ user.name }}/
 {% endif %}

@@ -29,19 +29,6 @@ source = "{{ container }}"
 enabled = ["{{ blueprint.services | join('", "') }}"]
 
 {% endif %}
-{% for user in blueprint.users | default([]) %}
-[[customizations.user]]
-name = "{{ user.name }}"
-{% if user.ssh_key is defined %}
-key = "{{ user.ssh_key }}"
-{% endif %}
-{% if user.password is defined %}
-password = "{{ user.password }}"
-{% endif %}
-{% if user.groups is defined %}
-groups = ["{{ user.groups | join('", "') }}"]
-{% endif %}
-
 {% endfor %}
 {% for directory in blueprint.directories | default([]) %}
 [[customizations.directories]]
