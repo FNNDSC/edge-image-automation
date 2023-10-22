@@ -20,7 +20,7 @@ user --name={{ user.name }}
 {%- endif %}
 
 {% if user.ssh_key is defined %}
-sshkey --username={{ user.name }} "{{ user.ssh_key }}""
+sshkey --username={{ user.name }} "{{ user.ssh_key }}"
 {% endif %}
 
 {% endfor %}
