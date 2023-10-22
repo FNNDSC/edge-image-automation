@@ -1,0 +1,9 @@
+[Unit]
+Description=A simple hello world example container
+
+[Install]
+WantedBy=default.target
+
+[Container]
+Image=quay.io/redhatgov/rust-hello-world:latest
+PublishPort=8000:8000
