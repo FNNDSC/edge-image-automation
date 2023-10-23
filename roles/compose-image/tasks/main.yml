@@ -12,13 +12,18 @@
   when:
     - blueprint.version not in blueprint_versions.stdout_lines
 
+- name: Check for parent existence
+  ansible.builtin.stat:
+    path: "{{ commit_repo_dir }}/{{ blueprint.name }}/repo"
+  register: repo_dir
+
 - name: Start compose
   infra.osbuild.start_compose:
     blueprint: "{{ blueprint.name }}"
     compose_type: edge-commit
-    ostree_ref: rhel/9/x86_64/edge
-    ostree_parent: rhel/9/x86_64/edge
-    ostree_url: http://localhost:{{ httpd.port }}/repo
+    ostree_ref: "{{ 'rhel/9/x86_64/edge' if repo_dir.stat.exists else omit }}"
+    ostree_parent: "{{ 'rhel/9/x86_64/edge' if repo_dir.stat.exists else omit }}"
+    ostree_url: "{{ 'http://localhost:'+httpd.port+'/repo' if repo_dir.stat.exists else omit }}"
     allow_duplicate: false
   register: builder_compose
 
