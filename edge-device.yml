@@ -1,18 +1,39 @@
 ---
+chrisomatic_container:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: chrisomatic
+            image: ghcr.io/fnndsc/chrisomatic:0.6.0
+            volumeMounts:
+              - mountPath: /var/run/docker.sock
+                name: podman-socket
+              - mountPath: /chrisomatic.yml
+                name: chrisomatic-config
+       volumes:
+         - hostPath:
+             path: /etc/containers/systemd/chrisomatic.yml
+             type: FileOrCreate
+           name: chrisomatic-config
 blueprints:
   - name: chris
     description: >-
-      rpm-ostree image of RHEL 9 with mini-CHRiS configured to run via podman
-    version: 0.0.8
-    packages:
-      - name: microshift
+      rpm-ostree image of RHEL 9 with ChBox configured to run via podman
+    version: 0.0.1
     services:
-      - microshift
+      - podman.socket
     package_groups:
       - container-management
     # This will only include the container image in the ostree image
     containers:
-      - quay.io/redhatgov/rust-hello-world:latest
+      - ghcr.io/fnndsc/cube:4.0.0.pre12
+      - docker.io/library/postgres:13
+      - docker.io/library/rabbitmq:3
+      - ghcr.io/fnndsc/chris_ui:20230523.257-cbc71ea8
+      - ghcr.io/fnndsc/pfcon:5.0.0
+      - ghcr.io/fnndsc/chrisomatic:0.4.1
+      - ghcr.io/fnndsc/pman:5.0.0.a5
     # All user configurations are only configured during kickstart
     users:
       - name: chris
@@ -21,14 +42,6 @@ blueprints:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCgGljB+CYmrCZ5ATJBdkCXOYNSdcXSSmq4TZsgzLNsvyaOI+arOOtZ0JAwYmg/wPHck0AaHP4rFhB4PohRbn9Z8n2lRlEtCQcKhgb1ZVSa2KFlWfk+/eCxdkx0QBZx2h0kQzOYhJx4fC35H1gsdK5fmRGZ4a1r+DjPpmJGcsuNptz/eoKhIa9jGaM7gFFKLgJYQ5cOeNJIXc1tMQCMXwPERIPSYRwPh8LcJ0B+f1hZml2FSNItxYUapykvWD7tPWHANSqVf00SIVjDQFrjoUZibj2JofDwdBepIktMoe0MDgV8n60CulCVGktfx7EObd4nq5eMhCziU3bwkjUsRYfTyCmSTUz82qFns7R0eG+48XftHziQGa+tgNehafrHLLLPgnt9lPeeIqkTxupRx+pl299AC9qKqw0WBSuWc7JQZy3rSQbh/w1dBll+t32mgn4NSND7ED/6knmWCXMnM9NeXH8SHmBJRELe/annM1ahCm0LRXVh3i/yLzPqPacjzIPW3JMpLEGnsBtFHNp7hCcfzhfH52ecqVzK1ZAkKZH4r3LOpX+i20Dq61AeATaiiqKokrLDmz16hkRhmiF6pvatBGVy8Lqnipht7RxnLTMl+is2hcBtYYvTY6BPAs2ImgnuSWdbHdBC6ag4IDZzv+XsHGBncQ/h8duv+IQ9W1b+zQ== jharmison@redhat.com
         groups:
           - wheel
-        linger: true
-        home_dir_links:
-          - src: /etc/containers/systemd/users/1000
-            dest: .config/containers/systemd
-    directories:
-      - path: /etc/containers/systemd/users/1000
-        user: 1000
-        group: 1000
     files:
       - path: /etc/sudoers.d/90-passwdless-sudoers
         mode: "0440"
@@ -37,12 +50,36 @@ blueprints:
       - path: /etc/hostname
         mode: "0644"
         content: |
-          mini-chris-rhde
-      - path: /etc/containers/systemd/users/1000/rust-hello-world.container
-        user: 1000
-        group: 1000
+          chbox-edge
+      - path: /etc/containers/systemd/minichris-aio.yml
         content: |-
-          {{ lookup("ansible.builtin.file", "rust-hello-world.container") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/00-config.yml") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/01-db.yml") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/88-rabbitmq.yml") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/89-cube.yml") | from_yaml | combine(chrisomatic_container, list_merge="append", recursive=true) }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/90-chrisui.yml") }}
+      - path: /etc/containers/systemd/minichris.kube
+        content: |-
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/quadlet/minichris.kube") }}
+      - path: /etc/containers/systemd/pfcon-podman.yml
+        content: |-
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/pfcon-podman.yml") | ansible.builtin.regex_replace("/run/user/1000/podman/podman\.sock", "/run/podman/podman.sock") }}
+      - path: /etc/containers/systemd/chrisomatic.yml
+        content: |-
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/chrisomatic.yml") }}
+      - path: /etc/containers/systemd/pfcon.kube
+        content: |-
+          [Unit]
+          Description=pfconfon+pman services connecting CUBE to podman
+          Requires=minichris.service
+          After=minichris.service
+
+          [Install]
+          WantedBy=default.target
+
+          [Kube]
+          Yaml=/etc/containers/systemd/pfcon-podman.yml
     # These only happen during kickstart
     firewall_cmds:
-      - --add-port=8000/tcp
+      - --add-port=8020/tcp
+
