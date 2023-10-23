@@ -16,6 +16,10 @@ chrisomatic_container:
               path: /etc/containers/systemd/chrisomatic.yml
               type: FileOrCreate
             name: chrisomatic-config
+          - hostPath:
+              path: /run/podman/podman.sock
+              type: FileOrCreate
+            name: podman-socket
 blueprints:
   - name: chris
     description: >-
