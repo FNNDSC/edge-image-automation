@@ -7,10 +7,17 @@
   changed_when: false
 
 - name: Load the blueprints into osbuild
-  infra.osbuild.push_blueprint:
-    blueprint: '{{ lookup("template", "blueprint.toml.j2") }}'
   when:
     - blueprint.version not in blueprint_versions.stdout_lines
+  block:
+    - name: Template the blueprint to disk
+      ansible.builtin.template:
+        src: blueprint.toml.j2
+        dest: "{{ build_dir }}/{{ blueprint.name }}.toml"
+
+    - name: Push the blueprint to osbuild
+      infra.osbuild.push_blueprint:
+      src: "{{ build_dir }}/{{ blueprint.name }}.toml"
 
 - name: Check for parent existence
   ansible.builtin.stat:
