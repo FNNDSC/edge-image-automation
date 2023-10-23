@@ -17,7 +17,7 @@
 
     - name: Push the blueprint to osbuild
       infra.osbuild.push_blueprint:
-      src: "{{ build_dir }}/{{ blueprint.name }}.toml"
+        src: "{{ build_dir }}/{{ blueprint.name }}.toml"
 
 - name: Check for parent existence
   ansible.builtin.stat:
