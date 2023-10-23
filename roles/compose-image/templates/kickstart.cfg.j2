@@ -30,6 +30,9 @@ echo "{{ ssh_key }}" >> /home/{{ user.name }}/.ssh/authorized_keys
 chmod 0600 /home/{{ user.name }}/.ssh/authorized_keys
 chown -R {{ user.name }}:{{ user.name }} /home/{{ user.name }}/
 {% endif %}
+{% if user.linger is defined and user.linger|bool == true %}
+touch /var/lib/systemd/linger/{{ user.name }}
+{% endif %}
 {% endfor %}
 
 {% for cmd in blueprint.filewall_cmds %}
