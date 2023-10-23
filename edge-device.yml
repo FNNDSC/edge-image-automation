@@ -22,6 +22,7 @@ blueprints:
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
     version: 0.0.1
     services:
+      - rpm-ostreed-automatic.timer
       - podman.socket
     package_groups:
       - container-management
@@ -87,6 +88,10 @@ blueprints:
 
           [Kube]
           Yaml=/etc/containers/systemd/pfcon-podman.yml
+      - path: /etc/rpm-ostreed.conf
+        content: |-
+          [Daemon]
+          AutomaticUpdatePolicy=stage
     # These only happen during kickstart
     firewall_cmds:
       - --add-port=8020/tcp
