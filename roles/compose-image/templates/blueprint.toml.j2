@@ -45,8 +45,8 @@ mode = "{{ file.mode | default("0644") }}"
 user = "{{ file.user | default("root") }}"
 group = "{{ file.group | default("root") }}"
 {% if file.content is defined %}
-data = """
-{{ file.content }}"""
+data = '''
+{{ file.content }}'''
 {% endif %}
 
 {% endfor %}

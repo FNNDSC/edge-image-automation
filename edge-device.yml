@@ -77,7 +77,7 @@ blueprints:
         content: |-
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/chrisomatic.yml", split_lines=false) }}
       - path: /etc/containers/systemd/pfcon.kube
-        content: |-
+        content: |
           [Unit]
           Description=pfconfon+pman services connecting CUBE to podman
           Requires=minichris.service
@@ -89,7 +89,7 @@ blueprints:
           [Kube]
           Yaml=/etc/containers/systemd/pfcon-podman.yml
       - path: /etc/rpm-ostreed.conf
-        content: |-
+        content: |
           [Daemon]
           AutomaticUpdatePolicy=stage
     # These only happen during kickstart
