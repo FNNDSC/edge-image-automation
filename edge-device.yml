@@ -11,11 +11,11 @@ chrisomatic_container:
                 name: podman-socket
               - mountPath: /chrisomatic.yml
                 name: chrisomatic-config
-       volumes:
-         - hostPath:
-             path: /etc/containers/systemd/chrisomatic.yml
-             type: FileOrCreate
-           name: chrisomatic-config
+        volumes:
+          - hostPath:
+              path: /etc/containers/systemd/chrisomatic.yml
+              type: FileOrCreate
+            name: chrisomatic-config
 blueprints:
   - name: chris
     description: >-
