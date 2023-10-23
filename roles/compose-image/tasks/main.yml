@@ -44,7 +44,7 @@
         path: "{{ item }}"
         state: directory
       loop:
-        - "{{ commit_repo_dir }}"
+        - "{{ commit_repo_dir }}/{{ blueprint.name }}"
         - "{{ build_dir }}"
 
     - name: Export the commit
