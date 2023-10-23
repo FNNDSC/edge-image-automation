@@ -13,7 +13,7 @@ rootpw --lock
 ostreesetup --nogpg --osname=rhel --remote=edge --url=http://aap-chbox.edgelab.dev:8080/{{ blueprint.name }}/repo/ --ref=rhel/9/x86_64/edge
 
 %post
-{% for user in blueprint.users %}
+{% for user in blueprint.users|default([]) %}
 adduser --create-home
 {%- if user.groups is defined %}
  --groups={{ user.groups | join(",") }}
@@ -35,7 +35,7 @@ touch /var/lib/systemd/linger/{{ user.name }}
 {% endif %}
 {% endfor %}
 
-{% for cmd in blueprint.filewall_cmds %}
+{% for cmd in blueprint.firewall_cmds|default([]) %}
 firewall-offline-cmd {{ cmd }}
 {% endfor %}
 %end
