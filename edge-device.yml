@@ -22,6 +22,9 @@ blueprints:
         groups:
           - wheel
         linger: true
+        home_dir_links:
+          - src: /etc/containers/systemd/users/1000
+            dest: .config/containers/systemd
     directories:
       - path: /etc/containers/systemd/users/1000
         user: 1000

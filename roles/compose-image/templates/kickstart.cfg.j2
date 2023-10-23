@@ -23,16 +23,22 @@ adduser --create-home
 {%- endif %}
  {{ user.name }}
 {% if user.ssh_keys is defined %}
-mkdir -p /home/{{ user.name }}/.ssh
+mkdir -p /var/home/{{ user.name }}/.ssh
 {% for ssh_key in user.ssh_keys %}
-echo "{{ ssh_key }}" >> /home/{{ user.name }}/.ssh/authorized_keys
+echo "{{ ssh_key }}" >> /var/home/{{ user.name }}/.ssh/authorized_keys
 {% endfor %}
-chmod 0600 /home/{{ user.name }}/.ssh/authorized_keys
-chown -R {{ user.name }}:{{ user.name }} /home/{{ user.name }}/
+chmod 0600 /var/home/{{ user.name }}/.ssh/authorized_keys
+chown -R {{ user.name }}:{{ user.name }} /var/home/{{ user.name }}/
 {% endif %}
 {% if user.linger is defined and user.linger|bool == true %}
 touch /var/lib/systemd/linger/{{ user.name }}
 {% endif %}
+{% for link in user.home_dir_links|default([]) %}
+mkdir -p "$(dirname "/var/home/{{ user.name }}/{{ link.dest }}")"
+mkdir -p "{{ link.src }}"
+ln -s "{{ link.src }}" "/var/home/{{ user.name }}/{{ link.dest }}"
+chown -R {{ user.name }}:{{ user.name }} "{{ link.src }}"
+{% endfor %}
 {% endfor %}
 
 {% for cmd in blueprint.firewall_cmds|default([]) %}
