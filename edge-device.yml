@@ -17,7 +17,7 @@ chrisomatic_container:
               type: FileOrCreate
             name: chrisomatic-config
 blueprints:
-  - name: chris
+    name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
     version: 0.0.1
@@ -53,20 +53,28 @@ blueprints:
           chbox-edge
       - path: /etc/containers/systemd/minichris-aio.yml
         content: |-
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/00-config.yml") }}
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/01-db.yml") }}
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/88-rabbitmq.yml") }}
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/89-cube.yml") | from_yaml | combine(chrisomatic_container, list_merge="append", recursive=true) }}
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/90-chrisui.yml") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/00-config.yml", split_lines=false) }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/01-db.yml", split_lines=false) }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/88-rabbitmq.yml", split_lines=false) }}
+          {% for manifest in lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/89-cube.yml", split_lines=false) | from_yaml_all %}
+          {% if manifest.kind == "Deployment" %}
+          ---
+          {{ manifest | combine(chrisomatic_container, list_merge="append", recursive=true) | to_yaml }}
+          {% else %}
+          ---
+          {{ manifest | to_yaml }}
+          {% endif %}
+          {% endfor %}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/kube/90-chrisui.yml", split_lines=false) }}
       - path: /etc/containers/systemd/minichris.kube
         content: |-
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/quadlet/minichris.kube") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/quadlet/minichris.kube", split_lines=false) }}
       - path: /etc/containers/systemd/pfcon-podman.yml
         content: |-
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/pfcon-podman.yml") | ansible.builtin.regex_replace("/run/user/1000/podman/podman\.sock", "/run/podman/podman.sock") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/podman/pfcon-podman.yml", split_lines=false) | ansible.builtin.regex_replace("/run/user/1000/podman/podman\.sock", "/run/podman/podman.sock") }}
       - path: /etc/containers/systemd/chrisomatic.yml
         content: |-
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/chrisomatic.yml") }}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/miniChRIS-podman/main/chrisomatic.yml", split_lines=false) }}
       - path: /etc/containers/systemd/pfcon.kube
         content: |-
           [Unit]
@@ -82,4 +90,3 @@ blueprints:
     # These only happen during kickstart
     firewall_cmds:
       - --add-port=8020/tcp
-
