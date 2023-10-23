@@ -6,6 +6,9 @@ chrisomatic_container:
         containers:
           - name: chrisomatic
             image: ghcr.io/fnndsc/chrisomatic:0.6.0
+            securityContext:
+              seLinuxOptions:
+                type: spc_t
             volumeMounts:
               - mountPath: /var/run/docker.sock
                 name: podman-socket
