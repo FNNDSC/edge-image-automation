@@ -17,7 +17,7 @@ chrisomatic_container:
               type: FileOrCreate
             name: chrisomatic-config
 blueprints:
-    name: chris
+  - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
     version: 0.0.1
