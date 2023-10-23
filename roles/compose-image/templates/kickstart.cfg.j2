@@ -28,7 +28,6 @@ mkdir -p /var/home/{{ user.name }}/.ssh
 echo "{{ ssh_key }}" >> /var/home/{{ user.name }}/.ssh/authorized_keys
 {% endfor %}
 chmod 0600 /var/home/{{ user.name }}/.ssh/authorized_keys
-chown -R {{ user.name }}:{{ user.name }} /var/home/{{ user.name }}/
 {% endif %}
 {% if user.linger is defined and user.linger|bool == true %}
 touch /var/lib/systemd/linger/{{ user.name }}
@@ -39,6 +38,7 @@ mkdir -p "{{ link.src }}"
 ln -s "{{ link.src }}" "/var/home/{{ user.name }}/{{ link.dest }}"
 chown -R {{ user.name }}:{{ user.name }} "{{ link.src }}"
 {% endfor %}
+chown -R {{ user.name }}:{{ user.name }} /var/home/{{ user.name }}
 {% endfor %}
 
 {% for cmd in blueprint.firewall_cmds|default([]) %}
