@@ -1,4 +1,7 @@
 ---
+- debug:
+    var: lookup("template", "blueprint.toml.j2")
+- fail:
 - name: Check for existing blueprints
   ansible.builtin.shell: >-
     composer-cli blueprints show {{ blueprint.name }} -j | jq -r '.[].body.blueprints[].version'
