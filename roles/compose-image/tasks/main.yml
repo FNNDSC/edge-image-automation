@@ -23,7 +23,7 @@
     compose_type: edge-commit
     ostree_ref: "{{ 'rhel/9/x86_64/edge' if repo_dir.stat.exists else omit }}"
     ostree_parent: "{{ 'rhel/9/x86_64/edge' if repo_dir.stat.exists else omit }}"
-    ostree_url: "{{ 'http://localhost:'+httpd.port+'/repo' if repo_dir.stat.exists else omit }}"
+    ostree_url: "{{ 'http://localhost:'+(httpd.port|string)+'/repo' if repo_dir.stat.exists else omit }}"
     allow_duplicate: false
   register: builder_compose
 
