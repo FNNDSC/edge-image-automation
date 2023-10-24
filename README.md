@@ -18,8 +18,17 @@ The following are required while we are deploying to the Edge
 
 
 ## The How 
+### How do install ChRIS in the box ?
 
-* Run Ansible Playbook via AAP Controller
+* Perform the changes and update version of the Blueprint in the ` edge-device.yaml ` so that the Ansible Automation Platform wil trigger the playbook to generate the iso that can copied from the server manually or remotely.
+* Once the ` chris.iso ` file is ready, please use it to boot the device
+
+### I have made some changes , How do I get them on my edge device ?
+
+  * Run the command ` rpm-ostree upgrade `
+  * After upgrade is completed , reboot the device using the command` systemctl reboot
+  * Verify to ensure the changes are present
+    
 
 
 ## References 
