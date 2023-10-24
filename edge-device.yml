@@ -27,7 +27,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 0.0.5
+    version: 0.0.6
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -36,7 +36,7 @@ blueprints:
     # This will only include the container image in the ostree image
     containers:
       - ghcr.io/fnndsc/cube:4.0.0.pre12
-      - docker.io/library/postgres:13
+      - docker.io/library/postgres:16
       - docker.io/library/rabbitmq:3
       - ghcr.io/fnndsc/chris_ui:20230523.257-cbc71ea8
       - ghcr.io/fnndsc/pfcon:5.0.0
