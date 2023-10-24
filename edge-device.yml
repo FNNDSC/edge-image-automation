@@ -1,28 +1,4 @@
 ---
-chrisomatic_container:
-  spec:
-    template:
-      spec:
-        containers:
-          - name: chrisomatic
-            image: ghcr.io/fnndsc/chrisomatic:0.6.0
-            securityContext:
-              seLinuxOptions:
-                type: spc_t
-            volumeMounts:
-              - mountPath: /var/run/docker.sock
-                name: podman-socket
-              - mountPath: /chrisomatic.yml
-                name: chrisomatic-config
-        volumes:
-          - hostPath:
-              path: /etc/containers/systemd/chrisomatic.yml
-              type: FileOrCreate
-            name: chrisomatic-config
-          - hostPath:
-              path: /run/podman/podman.sock
-              type: FileOrCreate
-            name: podman-socket
 blueprints:
   - name: chris
     description: >-
@@ -40,7 +16,6 @@ blueprints:
       - docker.io/library/rabbitmq:3
       - ghcr.io/fnndsc/chris_ui:20230523.257-cbc71ea8
       - ghcr.io/fnndsc/pfcon:5.0.0
-      - ghcr.io/fnndsc/chrisomatic:0.4.1
       - ghcr.io/fnndsc/pman:5.0.0.a5
     # All user configurations are only configured during kickstart
     users:
@@ -81,9 +56,7 @@ blueprints:
       - path: /etc/containers/systemd/pfcon-podman.yml
         content: |-
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/pfcon-podman.yml", split_lines=false) | ansible.builtin.regex_replace("/run/user/1000/podman/podman\.sock", "/run/podman/podman.sock") }}
-      - path: /etc/containers/systemd/chrisomatic.yml
-        content: |-
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/chrisomatic.yml", split_lines=false) }}
+
       - path: /etc/containers/systemd/pfcon.kube
         content: |
           [Unit]
