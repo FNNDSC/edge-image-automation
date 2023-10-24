@@ -7,8 +7,10 @@ blueprints:
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
+      - cockpit.socket
     package_groups:
       - container-management
+      - cockpit-podman
     # This will only include the container image in the ostree image
     containers:
       - ghcr.io/fnndsc/cube:4.0.0.pre12
