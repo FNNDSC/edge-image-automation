@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 0.0.7
+    version: 0.0.8
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -40,16 +40,9 @@ blueprints:
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/00-config.yml", split_lines=false) }}
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/01-db.yml", split_lines=false) }}
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/88-rabbitmq.yml", split_lines=false) }}
-          {% for manifest in lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/89-cube.yml", split_lines=false) | from_yaml_all %}
-          {% if manifest.kind == "Deployment" %}
-          ---
-          {{ manifest | combine(chrisomatic_container, list_merge="append", recursive=true) | to_yaml }}
-          {% else %}
-          ---
-          {{ manifest | to_yaml }}
-          {% endif %}
-          {% endfor %}
+          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/89-cube.yml", split_lines=false) }}
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/90-chrisui.yml", split_lines=false) }}
+      
       - path: /etc/containers/systemd/minichris.kube
         content: |-
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/minichris.kube", split_lines=false) }}
