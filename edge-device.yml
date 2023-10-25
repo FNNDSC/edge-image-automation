@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.0.6
+    version: 1.0.7
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -12,8 +12,6 @@ blueprints:
       - container-management
     packages:
       - cockpit-podman
-
-      cockpit-podman
     # This will only include the container image in the ostree image
     containers:
       - ghcr.io/fnndsc/cube:4.0.0.pre12
@@ -66,7 +64,7 @@ blueprints:
           WantedBy=default.target
 
           [Kube]
-          Network=chris.network
+          Network=podman.network
           Yaml=/etc/containers/systemd/pfcon-podman.yml
       - path: /etc/rpm-ostreed.conf
         content: |
