@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.0.8
+    version: 1.0.9
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -61,7 +61,7 @@ blueprints:
           WantedBy=default.target
 
           [Kube]
-          Network=podman.network
+          Network=podman
           Yaml=/etc/containers/systemd/pfcon-podman.yml
       - path: /etc/rpm-ostreed.conf
         content: |
