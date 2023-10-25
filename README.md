@@ -1,5 +1,8 @@
 # Edge-Image-Automation
 
+<img width="1428" alt="Screenshot 2023-10-25 at 2 25 39 PM" src="https://github.com/FNNDSC/edge-image-automation/assets/93591339/2bd547cc-d502-4591-b813-f608d565f289">
+
+
 ## The Why
 
 We need an automated way of creating the artifacts (iso & application) that are required to run Chris on the Edge (ChBox). 
