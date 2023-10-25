@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.0.9
+    version: 1.1.0
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -41,7 +41,6 @@ blueprints:
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/01-db.yml", split_lines=false) }}
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/88-rabbitmq.yml", split_lines=false) }}
           {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/89-cube.yml", split_lines=false) }}
-          {{ lookup("ansible.builtin.url", "https://raw.githubusercontent.com/FNNDSC/ChRIS-in-a-box/main/rfe/90-chrisui.yml", split_lines=false) }}
       
       - path: /etc/containers/systemd/minichris.kube
         content: |-
@@ -61,7 +60,6 @@ blueprints:
           WantedBy=default.target
 
           [Kube]
-          Network=podman
           Yaml=/etc/containers/systemd/pfcon-podman.yml
       - path: /etc/rpm-ostreed.conf
         content: |
