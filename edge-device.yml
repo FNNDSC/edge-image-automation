@@ -3,11 +3,10 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.1.8
+    version: 1.1.9
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
-      - cockpit.socket
     package_groups:
       - container-management
     # This will only include the container image in the ostree image
@@ -69,5 +68,4 @@ blueprints:
     # These only happen during kickstart
     firewall_cmds:
       - --add-port=8020/tcp
-      - --add-port=9090/tcp
 
