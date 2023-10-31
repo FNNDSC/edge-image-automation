@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.2.1
+    version: 1.2.3
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
