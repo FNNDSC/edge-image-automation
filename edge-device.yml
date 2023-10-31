@@ -71,4 +71,5 @@ blueprints:
     # These only happen during kickstart
     firewall_cmds:
       - --add-port=8020/tcp
+      - --add-server=cockpit
 
