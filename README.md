@@ -2,11 +2,11 @@
 
 <img width="1428" alt="Screenshot 2023-10-25 at 2 25 39 PM" src="https://github.com/FNNDSC/edge-image-automation/assets/93591339/2bd547cc-d502-4591-b813-f608d565f289">
 
-## The Why
+## Why
 
 We need an automated way of creating the artifacts (image iso & application) that are required to run Chris in a Box (ChBox). 
 
-## The What 
+## What 
 
 The following are required while we are deploying to the Edge 
 
@@ -17,7 +17,7 @@ The following are required while we are deploying to the Edge
 * OSTree remote (A remote repository or server that stores OSTree objects, which can include versioned file system trees, binaries, and other content used in the management and deployment of the operating system. OSTree remotes serve as a source from which clients can download and deploy updates or new versions of the file system.)
 
 
-## The How 
+## How 
 ### How do install ChRIS in the box for the first time ?
 
 * Perform the changes and update version of the Blueprint in the ` edge-device.yaml ` so that the Ansible Automation Platform wil trigger the playbook to generate the iso that can copied from the server manually or remotely.
