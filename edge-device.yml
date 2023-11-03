@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.2.5
+    version: 1.2.6
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -29,6 +29,8 @@ blueprints:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDmDZ4wVgaz2jV/QoRPtk0n+rBaDwozyl9aMmRB7dFbW/uSU+Ltimxc70x2/DtvVvLuX23BBX5M2RfCwPo7YRz9HF2iqFZ4zVXHELHf+fSTz0KejMkmvJh2uu+uubTppEOLJcQip6GamyoQIJ2C3cFYiHDaSDIE/Q6IgOJkBdh5oOQYNeva7kSr8aNIg1G3hHE7sZmCbasImcZqnMsBpYLQ7TXc0H115ZSweiRsBqPtx7uJ9XcVw7i6XtarbeZgUzlHlVP1QtyeX6Oz44VFHGw8cbnqhN78RBHodZcocKxIYlMgayRTUVOn5o8fujkLf6lTE8COKgM06vAhWGCCKfLn3DmjoQNQgSEwmciHaq5DpY04sv0iPaMLjhbRyI/a1Jw/ugrEtG1Y4sDJx9hLBukvHX1xFitOLqBhJwiySy20/AuktOQRYbRazjXTjLAJxz1niATWkp6N+c/r8P91aLzORSdm5LB9dIMfADwVGHrA1TIxsSpbKLtqIaVILwnuEOUvbkDd+/XOstL1rI03ok9DbydM4eCUVv6aePPRtHWezh18E+Me/sk6PMmFV5WrCKJ3QzCu2MssXyYm/+EIi6YKEJcdRcVMsb+ASHVFeqAPoTHrf1uSenw0opU4jaXJij+JEs6ZvmJa2gBIxbRhUSfw+2t/C9ua8dkdQfF1CaPOWw== raghurambanda@raghurambanda-mac
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCgGljB+CYmrCZ5ATJBdkCXOYNSdcXSSmq4TZsgzLNsvyaOI+arOOtZ0JAwYmg/wPHck0AaHP4rFhB4PohRbn9Z8n2lRlEtCQcKhgb1ZVSa2KFlWfk+/eCxdkx0QBZx2h0kQzOYhJx4fC35H1gsdK5fmRGZ4a1r+DjPpmJGcsuNptz/eoKhIa9jGaM7gFFKLgJYQ5cOeNJIXc1tMQCMXwPERIPSYRwPh8LcJ0B+f1hZml2FSNItxYUapykvWD7tPWHANSqVf00SIVjDQFrjoUZibj2JofDwdBepIktMoe0MDgV8n60CulCVGktfx7EObd4nq5eMhCziU3bwkjUsRYfTyCmSTUz82qFns7R0eG+48XftHziQGa+tgNehafrHLLLPgnt9lPeeIqkTxupRx+pl299AC9qKqw0WBSuWc7JQZy3rSQbh/w1dBll+t32mgn4NSND7ED/6knmWCXMnM9NeXH8SHmBJRELe/annM1ahCm0LRXVh3i/yLzPqPacjzIPW3JMpLEGnsBtFHNp7hCcfzhfH52ecqVzK1ZAkKZH4r3LOpX+i20Dq61AeATaiiqKokrLDmz16hkRhmiF6pvatBGVy8Lqnipht7RxnLTMl+is2hcBtYYvTY6BPAs2ImgnuSWdbHdBC6ag4IDZzv+XsHGBncQ/h8duv+IQ9W1b+zQ== jharmison@redhat.com
           - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtGLKegQTPhERrh6lhbNF5EfoQVC9RZirIiceuQBgf1actN8Rg4wuGStkKwQ+9xSiflQccgRx1f7IpIWu4yvok9d+9pb76rotgCw1H7tBRSYIFH1TDik9V+oG/rrE26v3XY7Db01dzc9MqdF4lCblEIJKLq1fMML0bfxFWm9/E12mtb9D9iMUEf5ZeC2g4DExOtos0cg9gtlVMGr9HaqPA2oPjfft2urU37fGDfeyo3sGtwxcfDm7UPj4otJRNBrM7VaRG1vvpqjGrMO37AMLwAFtTZ7EHxhxYGUd8vi8GxRkp4/fgcqk9vfZKad0xCY8WNYMr02V851d2UeyGdGAcQ== duffy@hellokitty.boston.redhat.com
+          - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0hjlBN1TvOvKxmso02aXdbINSMAa0+lG3inbgTBf90 jenni@macrophage
+
         groups:
           - wheel
     files:
@@ -74,6 +76,5 @@ blueprints:
     firewall_cmds:
       - --add-port=8020/tcp
       - --add-port=8000/tcp
-      - --add-port=9090/tcp
       - --add-service=cockpit
 
