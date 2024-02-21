@@ -3,7 +3,7 @@ blueprints:
   - name: chris
     description: >-
       rpm-ostree image of RHEL 9 with ChBox configured to run via podman
-    version: 1.2.9
+    version: 1.3.0
     services:
       - rpm-ostreed-automatic.timer
       - podman.socket
@@ -60,7 +60,7 @@ blueprints:
       - path: /etc/containers/systemd/pfcon.kube
         content: |
           [Unit]
-          Description=pfconfon+pman services connecting CUBE to podman
+          Description=pfconfon+pman services that are connecting CUBE to podman
           Requires=minichris.service
           After=minichris.service
 
